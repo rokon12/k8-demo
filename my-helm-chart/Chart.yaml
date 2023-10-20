@@ -1,0 +1,4 @@
+apiVersion: v2
+name: my-helm-chart
+description: Helm chart for Spring Boot and PostgreSQL
+version: 0.1.0

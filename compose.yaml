@@ -1,0 +1,24 @@
+services:
+
+  helloworld-spring-boot-app:
+    image: helloworld-spring-boot-app
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - 8080:8080
+    depends_on:
+      - my-postgres-db
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://my-postgres-db:5432/mydatabase
+      - SPRING_DATASOURCE_USERNAME=myuser
+      - SPRING_DATASOURCE_PASSWORD=secret
+
+  my-postgres-db:
+    image: 'postgres:15.2'
+    ports:
+      - "5432:5432"
+    environment:
+      - 'POSTGRES_USER=myuser'
+      - 'POSTGRES_DB=mydatabase'
+      - 'POSTGRES_PASSWORD=secret'

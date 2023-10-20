@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: helloworld-spring-boot-app
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app: helloworld-spring-boot-app
+
+  template:
+    metadata:
+      labels:
+        app: helloworld-spring-boot-app
+    spec:
+      containers:
+        - name: helloworld-spring-boot-app
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          livenessProbe:
+            httpGet:
+              port: 8080
+              path: {{ .Values.springboot.livenessProbe.path}}
+            initialDelaySeconds: {{ .Values.springboot.livenessProbe.initialDelaySeconds}}
+            periodSeconds: {{ .Values.springboot.livenessProbe.periodSeconds}}
+          readinessProbe:
+            httpGet:
+              port: 8080
+              path: {{ .Values.springboot.readinessProbe.path}}
+            initialDelaySeconds: {{ .Values.springboot.readinessProbe.initialDelaySeconds}}
+            periodSeconds: {{ .Values.springboot.readinessProbe.periodSeconds}}
+          env:
+            - name: SPRING_DATASOURCE_URL
+              value: jdbc:postgresql://my-postgres-service:5432/{{ .Values.postgres.database }}
+            - name: SPRING_DATASOURCE_USERNAME
+              value: {{ .Values.postgres.user }}
+            - name: SPRING_DATASOURCE_PASSWORD
+              value: {{ .Values.postgres.password }}
